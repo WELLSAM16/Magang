@@ -3,35 +3,64 @@
 import MetricCard from "@/components/MetricCard";
 import { useState, useEffect } from "react";
 
-// Mock data for posts
-const initialPosts = [
-  { id: 1, title: "Postingan Promo Musim Panas", views: 12500, likes: 4320, watchTime: 120 },
-  { id: 2, title: "Behind the Scenes", views: 8900, likes: 2100, watchTime: 85 },
-  { id: 3, title: "Q&A Session", views: 15400, likes: 5800, watchTime: 210 },
-];
 
 export default function Dashboard() {
-  const [posts, setPosts] = useState(initialPosts);
+  const [posts, setPosts] = useState<any[]>([]);
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  useEffect(() => {
+    // Read targets from Admin CRUD (localStorage)
+    const savedTargets = localStorage.getItem("mock_targets");
+    let baseTargets = [];
+    
+    if (savedTargets) {
+      baseTargets = JSON.parse(savedTargets);
+    } else {
+      baseTargets = [
+        { id: "1", title: "Postingan Promo Musim Panas", status: "Active" },
+        { id: "2", title: "Behind the Scenes", status: "Active" },
+        { id: "3", title: "Q&A Session", status: "Active" },
+      ];
+    }
+
+    // Assign mock metrics to the targets
+    const targetsWithMetrics = baseTargets.map((target: any, index: number) => ({
+      ...target,
+      views: 10000 + (index * 2500) + Math.floor(Math.random() * 1000),
+      likes: 3000 + (index * 800) + Math.floor(Math.random() * 500),
+      watchTime: 100 + (index * 30) + Math.floor(Math.random() * 20),
+    }));
+
+    setPosts(targetsWithMetrics);
+    setIsLoaded(true);
+  }, []);
 
   // Simulate global real-time updates for table data
   useEffect(() => {
+    if (!isLoaded) return;
+    
     const interval = setInterval(() => {
       setPosts((currentPosts) => 
-        currentPosts.map(post => ({
-          ...post,
-          views: post.views + Math.floor(Math.random() * 3),
-          likes: post.likes + (Math.random() > 0.5 ? 1 : 0),
-          watchTime: post.watchTime + (Math.random() > 0.8 ? 1 : 0)
-        }))
+        currentPosts.map(post => {
+          // Only update active posts
+          if (post.status !== "Active") return post;
+          
+          return {
+            ...post,
+            views: post.views + Math.floor(Math.random() * 5),
+            likes: post.likes + (Math.random() > 0.4 ? 1 : 0),
+            watchTime: post.watchTime + (Math.random() > 0.7 ? 1 : 0)
+          };
+        })
       );
-    }, 4000);
+    }, 3000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-      <header style={{ marginBottom: "40px", display: "flex", justifyContent: "space-between", alignItems: "flex-end" }}>
+      <header className="responsive-header">
         <div>
           <h1 className="text-gradient" style={{ fontSize: "2.5rem", margin: 0 }}>Dashboard Analytics</h1>
           <p style={{ margin: "5px 0 0 0" }}>Monitoring performa Instagram secara real-time</p>
@@ -67,19 +96,32 @@ export default function Dashboard() {
                 </tr>
               </thead>
               <tbody>
-                {posts.map(post => (
-                  <tr key={post.id}>
-                    <td style={{ fontWeight: 500 }}>{post.title}</td>
-                    <td style={{ color: "var(--primary)" }}>{post.views.toLocaleString()}</td>
-                    <td style={{ color: "var(--danger)" }}>{post.likes.toLocaleString()}</td>
-                    <td style={{ color: "var(--success)" }}>{post.watchTime.toLocaleString()}</td>
-                    <td>
-                      <span style={{ padding: "4px 8px", background: "rgba(16, 185, 129, 0.1)", color: "var(--success)", borderRadius: "4px", fontSize: "0.8rem" }}>
-                        Active
-                      </span>
+                {posts.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} style={{ textAlign: "center", color: "var(--text-muted)" }}>
+                      Belum ada target yang dimonitor. Tambahkan di menu Kelola Target.
                     </td>
                   </tr>
-                ))}
+                ) : (
+                  posts.map(post => (
+                    <tr key={post.id} style={{ opacity: post.status === "Active" ? 1 : 0.5 }}>
+                      <td style={{ fontWeight: 500 }}>{post.title}</td>
+                      <td style={{ color: "var(--primary)", transition: "all 0.3s" }}>{post.views.toLocaleString()}</td>
+                      <td style={{ color: "var(--danger)", transition: "all 0.3s" }}>{post.likes.toLocaleString()}</td>
+                      <td style={{ color: "var(--success)", transition: "all 0.3s" }}>{post.watchTime.toLocaleString()}</td>
+                      <td>
+                        <span style={{ 
+                          padding: "4px 8px", 
+                          background: post.status === "Active" ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)", 
+                          color: post.status === "Active" ? "var(--success)" : "var(--danger)", 
+                          borderRadius: "4px", fontSize: "0.8rem" 
+                        }}>
+                          {post.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>

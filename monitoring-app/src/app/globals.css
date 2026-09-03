@@ -37,6 +37,64 @@ a {
   text-decoration: none;
 }
 
+/* Responsive Layout */
+.layout-wrapper {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: row;
+}
+
+.main-content {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+  width: 100%;
+}
+
+.sidebar-container {
+  width: 260px;
+  min-height: calc(100vh - 40px);
+  margin: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 24px 0;
+}
+
+@media (max-width: 768px) {
+  .layout-wrapper {
+    flex-direction: column;
+  }
+  
+  .main-content {
+    padding: 20px;
+  }
+
+  .sidebar-container {
+    width: auto;
+    min-height: auto;
+    margin: 10px;
+    padding: 15px 0;
+  }
+
+  .sidebar-container .sidebar-header {
+    margin-bottom: 20px !important;
+    text-align: center;
+  }
+
+  .sidebar-container .sidebar-nav {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .responsive-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 15px;
+  }
+}
+
 /* Glassmorphism Utilities */
 .glass-panel {
   background: var(--card-bg);
@@ -136,6 +194,13 @@ p {
   background: linear-gradient(to right, #60a5fa, #c084fc);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+.responsive-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
 }
 
 /* Layout */

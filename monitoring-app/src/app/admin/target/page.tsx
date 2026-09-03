@@ -69,7 +69,7 @@ export default function TargetManagement() {
 
   return (
     <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-      <header style={{ marginBottom: "40px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <header className="responsive-header">
         <div>
           <h1 className="text-gradient" style={{ fontSize: "2.5rem", margin: 0 }}>Kelola Target</h1>
           <p style={{ margin: "5px 0 0 0" }}>Tambahkan target akun atau postingan (Hanya Admin)</p>

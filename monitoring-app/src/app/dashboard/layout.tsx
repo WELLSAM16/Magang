@@ -8,9 +8,9 @@ export default function DashboardLayout({
 }) {
   return (
     <ProtectedRoute>
-      <div style={{ display: "flex", minHeight: "100vh" }}>
+      <div className="layout-wrapper">
         <Sidebar />
-        <main style={{ flex: 1, padding: "40px", overflowY: "auto" }}>
+        <main className="main-content">
           {children}
         </main>
       </div>

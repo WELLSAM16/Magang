@@ -14,16 +14,16 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="glass-panel" style={{ width: "260px", minHeight: "calc(100vh - 40px)", margin: "20px", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "24px 0" }}>
+    <div className="glass-panel sidebar-container">
       <div>
-        <div style={{ padding: "0 24px", marginBottom: "40px" }}>
+        <div className="sidebar-header" style={{ padding: "0 24px", marginBottom: "40px" }}>
           <h2 className="text-gradient" style={{ fontSize: "1.5rem" }}>IG Monitor</h2>
           <p style={{ fontSize: "0.8rem", marginTop: "5px" }}>
             Role: <span style={{ color: user?.role === "admin" ? "var(--danger)" : "var(--success)", fontWeight: "bold", textTransform: "capitalize" }}>{user?.role}</span>
           </p>
         </div>
 
-        <nav style={{ display: "flex", flexDirection: "column", gap: "10px", padding: "0 12px" }}>
+        <nav className="sidebar-nav" style={{ display: "flex", flexDirection: "column", gap: "10px", padding: "0 12px" }}>
           {links.map((link) => {
             const isActive = pathname === link.href;
             return (
