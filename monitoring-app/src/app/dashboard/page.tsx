@@ -8,53 +8,44 @@ export default function Dashboard() {
   const [posts, setPosts] = useState<any[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
+  const [error, setError] = useState<string | null>(null);
+
   useEffect(() => {
-    // Read targets from Admin CRUD (localStorage)
-    const savedTargets = localStorage.getItem("mock_targets");
-    let baseTargets = [];
-    
-    if (savedTargets) {
-      baseTargets = JSON.parse(savedTargets);
-    } else {
-      baseTargets = [
-        { id: "1", title: "Postingan Promo Musim Panas", status: "Active" },
-        { id: "2", title: "Behind the Scenes", status: "Active" },
-        { id: "3", title: "Q&A Session", status: "Active" },
-      ];
+    async function fetchInstagram() {
+      try {
+        const res = await fetch("/api/instagram");
+        const data = await res.json();
+        
+        if (!res.ok) {
+          throw new Error(data.error || "Failed to fetch from Composio");
+        }
+
+        const mediaList = data.response_data?.data || data.data || [];
+        
+        // Map the Instagram response to our table format
+        const mappedPosts = mediaList.map((item: any) => ({
+          id: item.id,
+          title: item.caption ? (item.caption.length > 50 ? item.caption.substring(0, 50) + "..." : item.caption) : "No Caption",
+          mediaType: item.media_type || "UNKNOWN",
+          likes: item.like_count || 0,
+          comments: item.comments_count || 0,
+          link: item.permalink || "#",
+          status: "Active"
+        }));
+
+        setPosts(mappedPosts);
+      } catch (err: any) {
+        console.error("Dashboard fetch error:", err);
+        setError(err.message);
+      } finally {
+        setIsLoaded(true);
+      }
     }
 
-    // Assign mock metrics to the targets
-    const targetsWithMetrics = baseTargets.map((target: any, index: number) => ({
-      ...target,
-      views: 10000 + (index * 2500) + Math.floor(Math.random() * 1000),
-      likes: 3000 + (index * 800) + Math.floor(Math.random() * 500),
-      watchTime: 100 + (index * 30) + Math.floor(Math.random() * 20),
-    }));
-
-    setPosts(targetsWithMetrics);
-    setIsLoaded(true);
-  }, []);
-
-  // Simulate global real-time updates for table data
-  useEffect(() => {
-    if (!isLoaded) return;
+    fetchInstagram();
     
-    const interval = setInterval(() => {
-      setPosts((currentPosts) => 
-        currentPosts.map(post => {
-          // Only update active posts
-          if (post.status !== "Active") return post;
-          
-          return {
-            ...post,
-            views: post.views + Math.floor(Math.random() * 5),
-            likes: post.likes + (Math.random() > 0.4 ? 1 : 0),
-            watchTime: post.watchTime + (Math.random() > 0.7 ? 1 : 0)
-          };
-        })
-      );
-    }, 3000);
-
+    // Optional: Poll every 60 seconds
+    const interval = setInterval(fetchInstagram, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -75,49 +66,67 @@ export default function Dashboard() {
         <h2 style={{ fontSize: "1.2rem", marginBottom: "20px", color: "var(--text-muted)" }}>Ringkasan Akun (Agregat)</h2>
         <div className="grid-cards">
           {/* Colors in RGB for the MetricCard */}
-          <MetricCard title="Total Views" initialValue={36800} icon="👁️" color="59, 130, 246" />
-          <MetricCard title="Total Likes" initialValue={12220} icon="❤️" color="239, 68, 68" />
-          <MetricCard title="Total Jam Tayang (Menit)" initialValue={415} icon="⏱️" color="16, 185, 129" />
+          <MetricCard title="Total Posts" initialValue={posts.length} icon="📸" color="59, 130, 246" />
+          <MetricCard title="Total Likes" initialValue={posts.reduce((acc, curr) => acc + (curr.likes || 0), 0)} icon="❤️" color="239, 68, 68" />
+          <MetricCard title="Total Comments" initialValue={posts.reduce((acc, curr) => acc + (curr.comments || 0), 0)} icon="💬" color="16, 185, 129" />
         </div>
       </section>
 
       <section>
         <div className="glass-panel" style={{ padding: "24px" }}>
-          <h2 style={{ fontSize: "1.2rem", marginBottom: "20px" }}>Performa Per Postingan</h2>
+          <h2 style={{ fontSize: "1.2rem", marginBottom: "20px" }}>Performa Per Postingan Terbaru</h2>
+          {error && (
+            <div style={{ padding: "12px", background: "rgba(239, 68, 68, 0.1)", color: "var(--danger)", borderRadius: "8px", marginBottom: "16px" }}>
+              Error: {error}
+            </div>
+          )}
           <div style={{ overflowX: "auto" }}>
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Judul Postingan</th>
-                  <th>Views</th>
+                  <th>Caption</th>
+                  <th>Media Type</th>
                   <th>Likes</th>
-                  <th>Watch Time (Min)</th>
-                  <th>Status</th>
+                  <th>Comments</th>
+                  <th>Link</th>
                 </tr>
               </thead>
               <tbody>
-                {posts.length === 0 ? (
+                {!isLoaded ? (
                   <tr>
-                    <td colSpan={5} style={{ textAlign: "center", color: "var(--text-muted)" }}>
-                      Belum ada target yang dimonitor. Tambahkan di menu Kelola Target.
+                    <td colSpan={5} style={{ textAlign: "center", color: "var(--text-muted)", padding: "40px" }}>
+                      Memuat data dari Instagram...
+                    </td>
+                  </tr>
+                ) : posts.length === 0 ? (
+                  <tr>
+                    <td colSpan={5} style={{ textAlign: "center", color: "var(--text-muted)", padding: "40px" }}>
+                      Tidak ada postingan ditemukan atau terjadi error.
                     </td>
                   </tr>
                 ) : (
                   posts.map(post => (
                     <tr key={post.id} style={{ opacity: post.status === "Active" ? 1 : 0.5 }}>
                       <td style={{ fontWeight: 500 }}>{post.title}</td>
-                      <td style={{ color: "var(--primary)", transition: "all 0.3s" }}>{post.views.toLocaleString()}</td>
+                      <td style={{ color: "var(--primary)", transition: "all 0.3s" }}>{post.mediaType}</td>
                       <td style={{ color: "var(--danger)", transition: "all 0.3s" }}>{post.likes.toLocaleString()}</td>
-                      <td style={{ color: "var(--success)", transition: "all 0.3s" }}>{post.watchTime.toLocaleString()}</td>
+                      <td style={{ color: "var(--success)", transition: "all 0.3s" }}>{post.comments.toLocaleString()}</td>
                       <td>
-                        <span style={{ 
-                          padding: "4px 8px", 
-                          background: post.status === "Active" ? "rgba(16, 185, 129, 0.1)" : "rgba(239, 68, 68, 0.1)", 
-                          color: post.status === "Active" ? "var(--success)" : "var(--danger)", 
-                          borderRadius: "4px", fontSize: "0.8rem" 
-                        }}>
-                          {post.status}
-                        </span>
+                        <a 
+                          href={post.link} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          style={{
+                            padding: "6px 12px",
+                            background: "var(--primary)",
+                            color: "white",
+                            borderRadius: "6px",
+                            textDecoration: "none",
+                            fontSize: "0.85rem"
+                          }}
+                        >
+                          Buka IG
+                        </a>
                       </td>
                     </tr>
                   ))
