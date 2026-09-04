@@ -1,18 +1,19 @@
 import { NextResponse } from 'next/server';
-import { Composio } from "composio-core";
+import { ComposioToolSet } from "composio-core";
 
 // Initialize Composio client
-const composio = new Composio({
+const composio = new ComposioToolSet({
     apiKey: process.env.COMPOSIO_API_KEY,
 });
 
 export async function GET() {
     try {
         const entityId = process.env.COMPOSIO_ENTITY_ID || "ovule-proxy";
-        const entity = await composio.getEntity(entityId);
-
-        // Fetch Instagram Media
-        const response = await entity.execute({ actionName: "INSTAGRAM_GET_IG_USER_MEDIA", params: {} });
+        
+        const response = await composio.executeAction({
+            action: "INSTAGRAM_GET_IG_USER_MEDIA",
+            entityId: entityId
+        });
 
         if (!response) {
             throw new Error("No response from Composio");
