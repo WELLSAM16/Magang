@@ -12,7 +12,7 @@ export async function GET() {
         const entity = await composio.getEntity(entityId);
 
         // Fetch Instagram Media
-        const response = await entity.executeAction("INSTAGRAM_GET_IG_USER_MEDIA", {});
+        const response = await entity.execute({ actionName: "INSTAGRAM_GET_IG_USER_MEDIA", params: {} });
 
         if (!response) {
             throw new Error("No response from Composio");
