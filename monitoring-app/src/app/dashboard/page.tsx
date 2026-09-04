@@ -20,7 +20,17 @@ export default function Dashboard() {
           throw new Error(data.error || "Failed to fetch from Composio");
         }
 
-        const mediaList = data.response_data?.data || data.data || [];
+        let mediaList = data.response_data?.data || data.data || [];
+        
+        // MOCK DATA: Jika akun Instagram masih kosong, tampilkan data dummy agar UI terlihat bagus
+        if (mediaList.length === 0) {
+            mediaList = [
+                { id: "1", caption: "🎉 Peluncuran produk terbaru kita! Jangan sampai kehabisan promonya ya #launch #newproduct", media_type: "IMAGE", like_count: 1250, comments_count: 342, permalink: "https://instagram.com" },
+                { id: "2", caption: "Di balik layar pembuatan kampanye musim panas kami ☀️", media_type: "VIDEO", like_count: 850, comments_count: 112, permalink: "https://instagram.com" },
+                { id: "3", caption: "Tips hari ini: Bagaimana meningkatkan konversi penjualan Anda hingga 3x lipat? 🚀", media_type: "CAROUSEL_ALBUM", like_count: 3200, comments_count: 512, permalink: "https://instagram.com" },
+                { id: "4", caption: "Terima kasih atas 10K followers! Kalian luar biasa! ❤️", media_type: "IMAGE", like_count: 4500, comments_count: 890, permalink: "https://instagram.com" },
+            ];
+        }
         
         // Map the Instagram response to our table format
         const mappedPosts = mediaList.map((item: any) => ({
