@@ -8,7 +8,7 @@ const composio = new Composio({
 
 export async function GET() {
     try {
-        const entityId = "default";
+        const entityId = process.env.COMPOSIO_ENTITY_ID || "ovule-proxy";
         const entity = await composio.getEntity(entityId);
 
         // Fetch Instagram Media
