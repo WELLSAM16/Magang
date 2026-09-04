@@ -20,7 +20,14 @@ export default function Dashboard() {
           throw new Error(data.error || "Failed to fetch from Composio");
         }
 
-        let mediaList = data.response_data?.data || data.data || [];
+        let mediaList = [];
+        if (Array.isArray(data)) {
+            mediaList = data;
+        } else if (data && Array.isArray(data.data)) {
+            mediaList = data.data;
+        } else if (data?.response_data && Array.isArray(data.response_data.data)) {
+            mediaList = data.response_data.data;
+        }
         
         // MOCK DATA: Jika akun Instagram masih kosong, tampilkan data dummy agar UI terlihat bagus
         if (mediaList.length === 0) {

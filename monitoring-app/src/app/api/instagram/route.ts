@@ -19,7 +19,8 @@ export async function GET() {
                 connected_account_id: "ca_CyvFBCne1dTD",
                 entity_id: entityId,
                 arguments: {
-                    ig_user_id: "me"
+                    ig_user_id: "me",
+                    fields: "id,caption,media_type,like_count,comments_count,permalink,timestamp,username"
                 }
             })
         });
