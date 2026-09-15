@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import * as XLSX from 'xlsx';
 
 export default function SkoringPage() {
     const [posts, setPosts] = useState<any[]>([]);
@@ -37,6 +38,35 @@ export default function SkoringPage() {
         fetchSkoringData();
     }, []); // eslint-disable-line
 
+    const exportToExcel = () => {
+        if (!posts || posts.length === 0) {
+            alert("Tidak ada data untuk diekspor!");
+            return;
+        }
+
+        // Format data sesuai permintaan
+        const excelData = posts.map((post, index) => ({
+            "Nomor": index + 1,
+            "Tanggal": new Date(post.timestamp).toLocaleDateString(),
+            "Link": post.permalink,
+            "Kategori Media": post.scoring?.platform || "Tidak diketahui"
+        }));
+
+        // Buat worksheet dan workbook
+        const worksheet = XLSX.utils.json_to_sheet(excelData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Data Skoring");
+
+        // Nama file menyesuaikan tanggal filter (jika ada)
+        let filename = "Laporan_Skoring.xlsx";
+        if (startDate || endDate) {
+            filename = `Laporan_Skoring_${startDate || 'awal'}_sampai_${endDate || 'akhir'}.xlsx`;
+        }
+
+        // Trigger download
+        XLSX.writeFile(workbook, filename);
+    };
+
     return (
         <div className="container" style={{ padding: '20px' }}>
             <h1 className="text-gradient" style={{ marginBottom: '20px' }}>Skoring Dashboard</h1>
@@ -62,6 +92,14 @@ export default function SkoringPage() {
                 </div>
                 <button className="btn btn-primary" onClick={fetchSkoringData} disabled={loading}>
                     {loading ? 'Loading...' : 'Filter'}
+                </button>
+                <button 
+                    className="btn" 
+                    onClick={exportToExcel} 
+                    disabled={loading || posts.length === 0}
+                    style={{ background: '#10b981', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
+                >
+                    Download Excel
                 </button>
             </div>
 
