@@ -16,6 +16,7 @@ interface Post {
   shares: number;
   saved: number;
   plays: number;
+  views?: number;
 }
 
 function formatDate(ts: string) {
@@ -123,9 +124,9 @@ export default function Dashboard() {
     return () => clearInterval(interval);
   }, []);
 
-  const totalReach = posts.reduce((a, p) => a + p.reach, 0);
-  const totalImpressions = posts.reduce((a, p) => a + p.impressions, 0);
-  const totalLikes = posts.reduce((a, p) => a + p.likes, 0);
+  const totalReach = posts.reduce((sum, p) => sum + p.reach, 0);
+  const totalImpressions = posts.reduce((sum, p) => sum + (p.impressions || p.views || p.plays || 0), 0);
+  const totalLikes = posts.reduce((sum, p) => sum + p.likes, 0);
   const totalComments = posts.reduce((a, p) => a + p.comments, 0);
   const totalShares = posts.reduce((a, p) => a + p.shares, 0);
   const totalSaved = posts.reduce((a, p) => a + p.saved, 0);
@@ -247,7 +248,7 @@ export default function Dashboard() {
                           </a>
                         </td>
                         {[
-                          { val: post.impressions || post.plays || 0, color: "#0ea5e9" },
+                          { val: post.impressions || post.views || post.plays || 0, color: "#0ea5e9" },
                           { val: post.reach, color: "#8b5cf6" },
                           { val: post.likes, color: "var(--danger)" },
                           { val: post.comments, color: "var(--success)" },

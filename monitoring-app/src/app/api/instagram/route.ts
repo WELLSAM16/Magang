@@ -48,7 +48,8 @@ export async function GET() {
             mediaList.map(async (post: any) => {
                 try {
                     const insightsData = await callComposio(apiKey, entityId, "INSTAGRAM_GET_POST_INSIGHTS", {
-                        ig_post_id: post.id
+                        ig_post_id: post.id,
+                        metric: "impressions,reach,views,plays,video_views,saved,shares,carousel_album_impressions,carousel_album_reach,carousel_album_saved,carousel_album_shares"
                     });
 
                     // Parse metrik dari Insights
@@ -58,6 +59,7 @@ export async function GET() {
                         const val = item?.values?.[0]?.value ?? 0;
                         metrics[item.name] = typeof val === 'number' ? val : 0;
                     });
+                    console.log(`Metrics for ${post.id} (${post.media_type}):`, metrics);
 
                     return {
                         id: post.id,
@@ -68,12 +70,13 @@ export async function GET() {
                         username: post.username || "",
                         // Metrik dari Insights
                         reach: metrics['reach'] ?? metrics['carousel_album_reach'] ?? 0,
-                        impressions: metrics['impressions'] ?? metrics['carousel_album_impressions'] ?? 0,
+                        impressions: metrics['impressions'] ?? metrics['views'] ?? metrics['carousel_album_impressions'] ?? 0,
                         likes: post.like_count ?? metrics['likes'] ?? 0,
                         comments: post.comments_count ?? metrics['comments'] ?? 0,
                         shares: metrics['shares'] ?? metrics['carousel_album_shares'] ?? 0,
                         saved: metrics['saved'] ?? metrics['carousel_album_saved'] ?? 0,
-                        plays: metrics['plays'] ?? metrics['video_views'] ?? 0,
+                        plays: metrics['plays'] ?? metrics['video_views'] ?? metrics['views'] ?? 0,
+                        views: metrics['views'] ?? 0,
                     };
                 } catch (error) {
                     console.error("Insights error for post " + post.id, error);
@@ -92,6 +95,7 @@ export async function GET() {
                         shares: 0,
                         saved: 0,
                         plays: 0,
+                        views: 0,
                     };
                 }
             })
