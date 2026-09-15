@@ -51,7 +51,7 @@ export default function SkoringPage() {
         const excelData = posts.map((post, index) => ({
             "Nomor": index + 1,
             "Kategori": post.scoring?.kategori || "-",
-            "Tanggal": new Date(post.timestamp).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-'),
+            "Tanggal": new Date(post.timestamp).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }),
             "Username": post.username || "-",
             "Judul Pemberitaan": post.caption || "-",
             "Link": post.permalink,
@@ -134,7 +134,7 @@ export default function SkoringPage() {
                         )}
                         {posts.map((post) => (
                             <tr key={post.id} style={{ borderBottom: '1px solid var(--card-border)' }}>
-                                <td style={{ padding: '12px' }}>{new Date(post.timestamp).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '-')}</td>
+                                <td style={{ padding: '12px' }}>{new Date(post.timestamp).toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
                                 <td style={{ padding: '12px', maxWidth: '200px' }}>
                                     <div style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
                                         <a href={post.permalink} target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', fontWeight: '500' }}>
