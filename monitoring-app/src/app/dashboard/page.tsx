@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 
 interface Post {
   id: string;
@@ -142,9 +143,14 @@ export default function Dashboard() {
             {lastUpdated && <span style={{ marginLeft: "12px", color: "var(--success)", fontSize: "0.8rem" }}>● Diperbarui: {lastUpdated}</span>}
           </p>
         </div>
-        <span style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--success)", fontSize: "0.85rem" }}>
-          <span className="live-indicator"></span> Live System Active
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
+          <Link href="/dashboard/skoring">
+            <button className="btn" style={{ padding: "8px 16px", fontSize: "0.9rem" }}>Skoring & Sentimen</button>
+          </Link>
+          <span style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--success)", fontSize: "0.85rem" }}>
+            <span className="live-indicator"></span> Live System Active
+          </span>
+        </div>
       </header>
 
       {/* Ringkasan Metrik */}
