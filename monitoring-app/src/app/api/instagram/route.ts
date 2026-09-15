@@ -47,11 +47,11 @@ export async function GET() {
         const postsWithInsights = await Promise.all(
             mediaList.map(async (post: any) => {
                 try {
-                    let metricsToRequest = "impressions,reach,saved,engagement";
+                    let metricsToRequest = "impressions,reach,saved,total_interactions,shares";
                     if (post.media_type === "VIDEO") {
                         metricsToRequest = "plays,reach,saved,shares,total_interactions";
                     } else if (post.media_type === "CAROUSEL_ALBUM") {
-                        metricsToRequest = "carousel_album_impressions,carousel_album_reach,carousel_album_saved,carousel_album_engagement";
+                        metricsToRequest = "impressions,reach,saved,total_interactions,shares";
                     }
 
                     const insightsData = await callComposio(apiKey, entityId, "INSTAGRAM_GET_POST_INSIGHTS", {
@@ -63,8 +63,8 @@ export async function GET() {
                     const metrics: Record<string, number> = {};
                     const items: any[] = Array.isArray(insightsData?.data) ? insightsData.data : [];
                     items.forEach((item: any) => {
-                        const val = item?.values?.[0]?.value ?? 0;
-                        metrics[item.name] = typeof val === 'number' ? val : 0;
+                        const val = item?.values?.[0]?.value;
+                        metrics[item.name] = (val !== undefined && val !== null && !isNaN(Number(val))) ? Number(val) : 0;
                     });
                     console.log(`Metrics for ${post.id} (${post.media_type}):`, metrics);
 
