@@ -81,7 +81,7 @@ export default function SkoringPage() {
                         type="date" 
                         value={startDate} 
                         onChange={(e) => setStartDate(e.target.value)}
-                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', background: '#222', color: '#fff' }}
+                        className="input-field"
                     />
                 </div>
                 <div>
@@ -90,28 +90,20 @@ export default function SkoringPage() {
                         type="date" 
                         value={endDate} 
                         onChange={(e) => setEndDate(e.target.value)}
-                        style={{ padding: '8px', borderRadius: '4px', border: '1px solid #ccc', background: '#222', color: '#fff' }}
+                        className="input-field"
                     />
                 </div>
                 <button className="btn btn-primary" onClick={fetchSkoringData} disabled={loading}>
                     {loading ? 'Loading...' : 'Filter'}
                 </button>
-                <button 
-                    className="btn" 
-                    onClick={exportToExcel} 
-                    disabled={loading || posts.length === 0}
-                    style={{ background: '#10b981', color: '#fff', border: 'none', padding: '8px 16px', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold' }}
-                >
-                    Download Excel
-                </button>
             </div>
 
             {error && <div style={{ color: '#ff4d4f', marginBottom: '20px' }}>{error}</div>}
 
-            <div className="glass-panel" style={{ overflowX: 'auto' }}>
+            <div className="glass-panel" style={{ overflowX: 'auto', maxHeight: '60vh', overflowY: 'auto' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                     <thead>
-                        <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                        <tr style={{ borderBottom: '1px solid var(--card-border)' }}>
                             <th style={{ padding: '12px' }}>Date</th>
                             <th style={{ padding: '12px' }}>Media</th>
                             <th style={{ padding: '12px' }}>Platform</th>
@@ -128,11 +120,11 @@ export default function SkoringPage() {
                             </tr>
                         )}
                         {posts.map((post) => (
-                            <tr key={post.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                            <tr key={post.id} style={{ borderBottom: '1px solid var(--card-border)' }}>
                                 <td style={{ padding: '12px' }}>{new Date(post.timestamp).toLocaleDateString()}</td>
                                 <td style={{ padding: '12px', maxWidth: '200px' }}>
                                     <div style={{ textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap' }}>
-                                        <a href={post.permalink} target="_blank" rel="noreferrer" style={{ color: '#00e5ff' }}>
+                                        <a href={post.permalink} target="_blank" rel="noreferrer" style={{ color: 'var(--primary)', fontWeight: '500' }}>
                                             {post.caption ? post.caption.substring(0, 50) + '...' : 'View Post'}
                                         </a>
                                     </div>
@@ -140,26 +132,37 @@ export default function SkoringPage() {
                                 <td style={{ padding: '12px' }}>{post.scoring?.platform}</td>
                                 <td style={{ padding: '12px' }}>{post.likes}</td>
                                 <td style={{ padding: '12px' }}>
-                                    <span style={{ padding: '4px 10px', borderRadius: '12px', background: 'rgba(0, 229, 255, 0.2)', fontSize: '0.85em', whiteSpace: 'nowrap', display: 'inline-block' }}>
+                                    <span style={{ padding: '4px 10px', borderRadius: '12px', background: 'rgba(59, 130, 246, 0.15)', color: 'var(--primary)', fontSize: '0.85em', whiteSpace: 'nowrap', display: 'inline-block' }}>
                                         {post.scoring?.kategori}
                                     </span>
                                 </td>
                                 <td style={{ padding: '12px' }}>
                                     <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
                                         {post.scoring?.keywords?.map((kw: string, i: number) => (
-                                            <span key={i} style={{ padding: '2px 6px', borderRadius: '4px', background: 'rgba(255,255,255,0.1)', fontSize: '0.8em' }}>
+                                            <span key={i} style={{ padding: '2px 6px', borderRadius: '4px', background: 'rgba(0,0,0,0.05)', border: '1px solid var(--card-border)', fontSize: '0.8em' }}>
                                                 {kw}
                                             </span>
                                         ))}
                                     </div>
                                 </td>
-                                <td style={{ padding: '12px', fontWeight: 'bold', color: '#00e5ff' }}>
+                                <td style={{ padding: '12px', fontWeight: 'bold', color: 'var(--primary)' }}>
                                     {post.scoring?.score}
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '20px' }}>
+                <button 
+                    className="btn" 
+                    onClick={exportToExcel} 
+                    disabled={loading || posts.length === 0}
+                    style={{ background: '#10b981', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 'bold', boxShadow: '0 4px 15px rgba(16, 185, 129, 0.3)' }}
+                >
+                    Download Excel
+                </button>
             </div>
         </div>
     );

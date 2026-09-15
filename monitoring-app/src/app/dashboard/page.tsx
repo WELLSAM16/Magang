@@ -146,15 +146,11 @@ export default function Dashboard() {
       {/* Header */}
       <header style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "32px", flexWrap: "wrap", gap: "12px" }}>
         <div>
-          <h1 className="text-gradient" style={{ fontSize: "2.2rem", margin: 0 }}>Dashboard Analytics</h1>
-          <p style={{ margin: "6px 0 0 0", color: "var(--text-muted)", fontSize: "0.9rem" }}>
-            Monitoring performa Instagram secara real-time
-            {lastUpdated && <span style={{ marginLeft: "12px", color: "var(--success)", fontSize: "0.8rem" }}>● Diperbarui: {lastUpdated}</span>}
-          </p>
+          <h1 style={{ fontSize: "2.2rem", margin: 0, color: "#0ea5e9" }}>Live Medsos Monitoring</h1>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "15px" }}>
           <Link href="/dashboard/skoring">
-            <button className="btn" style={{ padding: "8px 16px", fontSize: "0.9rem" }}>Skoring & Sentimen</button>
+            <button className="btn" style={{ background: "var(--success)", color: "white", padding: "8px 16px", fontSize: "0.9rem", border: "none" }}>Skoring & Sentimen</button>
           </Link>
           <span style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--success)", fontSize: "0.85rem" }}>
             <span className="live-indicator"></span> Live System Active
@@ -177,13 +173,13 @@ export default function Dashboard() {
       {/* Tabel Detail */}
       <section>
         <div style={{
-          background: "rgba(255,255,255,0.03)",
-          border: "1px solid rgba(255,255,255,0.08)",
+          background: "var(--card-bg)",
+          border: "1px solid var(--card-border)",
           borderRadius: "16px",
           overflow: "hidden",
         }}>
-          <div style={{ padding: "20px 24px", borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700 }}>Instagram — Arsip & Explorer</h2>
+          <div style={{ padding: "20px 24px", borderBottom: "1px solid var(--card-border)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <h2 style={{ margin: 0, fontSize: "1.05rem", fontWeight: 700 }}>Daftar Postingan</h2>
           </div>
 
           {error && (
@@ -195,13 +191,13 @@ export default function Dashboard() {
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
               <thead>
-                <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+                <tr style={{ borderBottom: "1px solid var(--card-border)" }}>
                   {["TANGGAL", "FORMAT", "JUDUL / HOOK", "TAYANGAN", "JANGKAUAN", "SUKA", "KOMENTAR", "SIMPAN"].map(col => (
                     <th key={col} style={{
                       padding: "12px 16px",
                       textAlign: col === "JUDUL / HOOK" ? "left" : "center",
                       color: "var(--text-muted)",
-                      fontWeight: 600,
+                      fontWeight: "bold",
                       fontSize: "0.75rem",
                       letterSpacing: "0.06em",
                       whiteSpace: "nowrap",
@@ -234,10 +230,10 @@ export default function Dashboard() {
 
                     return (
                       <tr key={post.id} style={{
-                        borderBottom: "1px solid rgba(255,255,255,0.04)",
+                        borderBottom: "1px solid var(--card-border)",
                         transition: "background 0.15s",
                       }}
-                        onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.03)"}
+                        onMouseEnter={e => e.currentTarget.style.background = "rgba(0,0,0,0.03)"}
                         onMouseLeave={e => e.currentTarget.style.background = "transparent"}
                       >
                         <td style={{ padding: "13px 16px", whiteSpace: "nowrap", color: "var(--text-muted)", fontSize: "0.82rem" }}>

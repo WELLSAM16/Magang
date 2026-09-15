@@ -9,7 +9,7 @@ export default function Sidebar() {
   const pathname = usePathname();
 
   const links = [
-    { name: "Dashboard", href: "/dashboard", icon: "📊" },
+    { name: "Skoring Medsos", href: "/dashboard", icon: "📊" },
     ...(user?.role === "admin" ? [{ name: "Kelola Target", href: "/admin/target", icon: "⚙️" }] : []),
   ];
 
