@@ -139,7 +139,6 @@ export default function Dashboard() {
   const totalImpressions = posts.reduce((sum, p) => sum + (p.impressions || p.views || p.plays || 0), 0);
   const totalLikes = posts.reduce((sum, p) => sum + p.likes, 0);
   const totalComments = posts.reduce((a, p) => a + p.comments, 0);
-  const totalShares = posts.reduce((a, p) => a + p.shares, 0);
   const totalSaved = posts.reduce((a, p) => a + p.saved, 0);
 
   return (
@@ -172,7 +171,6 @@ export default function Dashboard() {
           <MetricBox label="Total Suka" value={totalLikes} color="var(--danger)" />
           <MetricBox label="Total Komentar" value={totalComments} color="var(--success)" />
           <MetricBox label="Total Simpan" value={totalSaved} color="#f59e0b" />
-          <MetricBox label="Total Bagikan" value={totalShares} color="#ec4899" />
         </div>
       </section>
 
@@ -198,7 +196,7 @@ export default function Dashboard() {
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-                  {["TANGGAL", "FORMAT", "JUDUL / HOOK", "TAYANGAN", "JANGKAUAN", "SUKA", "KOMENTAR", "BAGIKAN", "SIMPAN"].map(col => (
+                  {["TANGGAL", "FORMAT", "JUDUL / HOOK", "TAYANGAN", "JANGKAUAN", "SUKA", "KOMENTAR", "SIMPAN"].map(col => (
                     <th key={col} style={{
                       padding: "12px 16px",
                       textAlign: col === "JUDUL / HOOK" ? "left" : "center",
@@ -266,7 +264,6 @@ export default function Dashboard() {
                           { val: post.reach, color: "#8b5cf6" },
                           { val: post.likes, color: "var(--danger)" },
                           { val: post.comments, color: "var(--success)" },
-                          { val: post.shares, color: "#ec4899" },
                           { val: post.saved, color: "#f59e0b" },
                         ].map(({ val, color }, idx) => (
                           <td key={idx} style={{ padding: "13px 16px", textAlign: "center", fontWeight: 600, color }}>
