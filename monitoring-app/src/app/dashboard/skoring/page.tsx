@@ -48,6 +48,8 @@ export default function SkoringPage() {
         const excelData = posts.map((post, index) => ({
             "Nomor": index + 1,
             "Tanggal": new Date(post.timestamp).toLocaleDateString(),
+            "Username": post.username || "-",
+            "Judul Pemberitaan": post.caption || "-",
             "Link": post.permalink,
             "Kategori Media": post.scoring?.tierName || post.scoring?.platform || "Tidak diketahui"
         }));
