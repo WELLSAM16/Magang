@@ -65,18 +65,28 @@ function FormatBadge({ mediaType }: { mediaType: string }) {
 
 function MetricBox({ label, value, color }: { label: string; value: number | string; color: string }) {
   return (
-    <div style={{
-      background: "var(--glass-bg)",
-      border: "1px solid var(--glass-border)",
-      borderRadius: "16px",
+    <div className="glass-card" style={{
       padding: "20px 24px",
       flex: 1,
       minWidth: "140px",
+      position: "relative",
+      overflow: "hidden",
+      borderLeft: `4px solid ${color}`
     }}>
-      <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginBottom: "8px", fontWeight: 500 }}>
+      <div style={{
+        position: "absolute",
+        top: 0, right: 0,
+        width: "80px", height: "80px",
+        background: color,
+        opacity: 0.15,
+        filter: "blur(25px)",
+        borderRadius: "50%",
+        transform: "translate(30%, -30%)"
+      }}></div>
+      <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginBottom: "8px", fontWeight: 500, letterSpacing: "0.03em" }}>
         {label}
       </div>
-      <div style={{ fontSize: "1.9rem", fontWeight: 700, color }}>
+      <div style={{ fontSize: "2rem", fontWeight: 700, color, textShadow: `0 2px 15px ${color}44` }}>
         {typeof value === "number" ? value.toLocaleString("id-ID") : value}
       </div>
     </div>
@@ -154,9 +164,8 @@ export default function Dashboard() {
       </header>
 
       {/* Ringkasan Metrik */}
-      <section style={{ marginBottom: "32px" }}>
-        <h2 style={{ fontSize: "1rem", marginBottom: "16px", color: "var(--text-muted)", fontWeight: 600, letterSpacing: "0.05em", textTransform: "uppercase" }}>Ringkasan Akun (Agregat)</h2>
-        <div style={{ display: "flex", gap: "14px", flexWrap: "wrap" }}>
+      <section style={{ marginBottom: "40px" }}>
+        <div style={{ display: "flex", gap: "16px", flexWrap: "wrap" }}>
           <MetricBox label="Total Postingan" value={posts.length} color="var(--primary)" />
           <MetricBox label="Total Jangkauan" value={totalReach} color="#8b5cf6" />
           <MetricBox label="Total Tayangan" value={totalImpressions} color="#0ea5e9" />
@@ -229,10 +238,9 @@ export default function Dashboard() {
                       <tr key={post.id} style={{
                         borderBottom: "1px solid rgba(255,255,255,0.04)",
                         transition: "background 0.15s",
-                        background: i % 2 === 0 ? "rgba(255,255,255,0.01)" : "transparent",
                       }}
-                        onMouseEnter={e => (e.currentTarget.style.background = "rgba(255,255,255,0.05)")}
-                        onMouseLeave={e => (e.currentTarget.style.background = i % 2 === 0 ? "rgba(255,255,255,0.01)" : "transparent")}
+                        onMouseEnter={e => e.currentTarget.style.background = "rgba(255,255,255,0.03)"}
+                        onMouseLeave={e => e.currentTarget.style.background = "transparent"}
                       >
                         <td style={{ padding: "13px 16px", whiteSpace: "nowrap", color: "var(--text-muted)", fontSize: "0.82rem" }}>
                           {formatDate(post.timestamp)}
