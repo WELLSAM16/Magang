@@ -93,10 +93,11 @@ export default function KeywordManagerModal({ isOpen, onClose }: KeywordManagerM
             backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1000,
             display: 'flex', justifyContent: 'center', alignItems: 'center'
         }}>
-            <div className="glass-panel" style={{
+            <div style={{
                 width: '90%', maxWidth: '700px', maxHeight: '90vh',
                 padding: '30px', overflowY: 'auto', position: 'relative',
-                background: 'var(--card-bg)', border: '1px solid var(--card-border)'
+                background: '#ffffff', border: '1px solid var(--card-border)',
+                borderRadius: '16px', boxShadow: '0 10px 30px rgba(0,0,0,0.1)'
             }}>
                 <h2 className="text-gradient" style={{ marginBottom: '20px' }}>Kelola Keyword Kategori</h2>
                 

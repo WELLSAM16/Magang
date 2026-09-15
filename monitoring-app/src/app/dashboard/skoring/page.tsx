@@ -77,14 +77,11 @@ export default function SkoringPage() {
         <div className="container" style={{ padding: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '15px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
-                    <Link href="/dashboard" className="btn" style={{ textDecoration: 'none', background: 'var(--card-bg)', border: '1px solid var(--card-border)', padding: '8px 16px', borderRadius: '8px', color: 'var(--text-color)', fontWeight: 'bold' }}>
+                    <Link href="/dashboard" className="btn" style={{ textDecoration: 'none', background: '#ef4444', border: '1px solid #ef4444', padding: '8px 16px', borderRadius: '8px', color: '#ffffff', fontWeight: 'bold', boxShadow: '0 4px 15px rgba(239, 68, 68, 0.3)' }}>
                         &larr; Back
                     </Link>
                     <h1 className="text-gradient" style={{ margin: 0 }}>Skoring Dashboard</h1>
                 </div>
-                <button className="btn btn-primary" onClick={() => setIsKeywordModalOpen(true)}>
-                    Kelola Keyword
-                </button>
             </div>
             
             <div className="glass-panel" style={{ padding: '20px', marginBottom: '20px', display: 'flex', gap: '15px', alignItems: 'flex-end' }}>
@@ -108,6 +105,9 @@ export default function SkoringPage() {
                 </div>
                 <button className="btn btn-primary" onClick={fetchSkoringData} disabled={loading}>
                     {loading ? 'Loading...' : 'Filter'}
+                </button>
+                <button className="btn btn-primary" onClick={() => setIsKeywordModalOpen(true)}>
+                    Kelola Keyword
                 </button>
             </div>
 
