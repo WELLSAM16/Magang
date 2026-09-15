@@ -36,14 +36,20 @@ export async function GET(request: Request) {
 
         // Hitung skor untuk setiap post
         const scoredPosts = posts.map((post: any) => {
+            // Ambil views (bisa dari plays jika video, atau views/impressions)
+            const viewsCount = post.plays || post.views || post.impressions || 0;
+            const likesCount = post.likes || 0;
+            const scoreMetric = Math.max(likesCount, viewsCount);
+
             const scoringInfo = calculatePostScore({
                 media_type: post.media_type,
-                likes: post.likes || 0,
+                likes: scoreMetric,
                 caption: post.caption || ''
             }, keywordMap);
 
             return {
                 ...post,
+                used_metric_value: scoreMetric,
                 scoring: scoringInfo
             };
         });

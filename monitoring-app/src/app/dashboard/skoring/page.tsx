@@ -120,7 +120,7 @@ export default function SkoringPage() {
                             <th style={{ padding: '12px' }}>Date</th>
                             <th style={{ padding: '12px' }}>Media</th>
                             <th style={{ padding: '12px' }}>Platform</th>
-                            <th style={{ padding: '12px' }}>Likes</th>
+                            <th style={{ padding: '12px' }}>Metric (Max)</th>
                             <th style={{ padding: '12px' }}>Kategori</th>
                             <th style={{ padding: '12px' }}>Keywords</th>
                             <th style={{ padding: '12px' }}>Score</th>
@@ -143,7 +143,9 @@ export default function SkoringPage() {
                                     </div>
                                 </td>
                                 <td style={{ padding: '12px' }}>{post.scoring?.platform}</td>
-                                <td style={{ padding: '12px' }}>{post.likes}</td>
+                                <td style={{ padding: '12px' }} title={`Likes: ${post.likes || 0}, Views: ${post.plays || post.views || post.impressions || 0}`}>
+                                    {post.used_metric_value || post.likes || 0}
+                                </td>
                                 <td style={{ padding: '12px' }}>
                                     <span style={{ padding: '4px 10px', borderRadius: '12px', background: 'rgba(59, 130, 246, 0.15)', color: 'var(--primary)', fontSize: '0.85em', whiteSpace: 'nowrap', display: 'inline-block' }}>
                                         {post.scoring?.kategori}
