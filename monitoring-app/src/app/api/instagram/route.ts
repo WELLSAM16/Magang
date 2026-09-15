@@ -47,11 +47,13 @@ export async function GET() {
         const postsWithInsights = await Promise.all(
             mediaList.map(async (post: any) => {
                 try {
-                    let metricsToRequest = "impressions,reach,saved,total_interactions,shares";
+                    // views menggantikan impressions (deprecated sejak Meta API v22.0+, mati April 2025)
+                    // plays hanya tersedia untuk VIDEO/REELS
+                    let metricsToRequest = "views,reach,saved,shares,total_interactions";
                     if (post.media_type === "VIDEO") {
-                        metricsToRequest = "plays,reach,saved,shares,total_interactions";
+                        metricsToRequest = "plays,views,reach,saved,shares,total_interactions";
                     } else if (post.media_type === "CAROUSEL_ALBUM") {
-                        metricsToRequest = "impressions,reach,saved,total_interactions,shares";
+                        metricsToRequest = "views,reach,saved,shares,total_interactions";
                     }
 
                     const insightsData = await callComposio(apiKey, entityId, "INSTAGRAM_GET_POST_INSIGHTS", {
@@ -75,15 +77,15 @@ export async function GET() {
                         permalink: post.permalink || "#",
                         timestamp: post.timestamp || "",
                         username: post.username || "",
-                        // Metrik dari Insights
-                        reach: metrics['reach'] ?? metrics['carousel_album_reach'] ?? 0,
-                        impressions: metrics['impressions'] ?? metrics['views'] ?? metrics['carousel_album_impressions'] ?? 0,
+                        // Metrik dari Insights — prioritaskan views (pengganti impressions)
+                        reach: metrics['reach'] ?? 0,
+                        impressions: metrics['views'] ?? metrics['impressions'] ?? 0,
                         likes: post.like_count ?? metrics['likes'] ?? 0,
                         comments: post.comments_count ?? metrics['comments'] ?? 0,
-                        shares: metrics['shares'] ?? metrics['carousel_album_shares'] ?? 0,
-                        saved: metrics['saved'] ?? metrics['carousel_album_saved'] ?? 0,
-                        plays: metrics['plays'] ?? metrics['video_views'] ?? metrics['views'] ?? 0,
-                        views: metrics['views'] ?? 0,
+                        shares: metrics['shares'] ?? 0,
+                        saved: metrics['saved'] ?? 0,
+                        plays: metrics['plays'] ?? 0,
+                        views: metrics['views'] ?? metrics['plays'] ?? 0,
                     };
                 } catch (error) {
                     console.error("Insights error for post " + post.id, error);
