@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 const COMPOSIO_BASE = "https://backend.composio.dev/api/v3.1/tools/execute";
-const CONNECTED_ACCOUNT_ID = "ca_WLZT1iSNSk_b";
+const CONNECTED_ACCOUNT_ID = "ca_l59wvR8Y2YAY";
 
 async function callComposio(apiKey: string, entityId: string, tool: string, args: object) {
     const res = await fetch(`${COMPOSIO_BASE}/${tool}`, {
