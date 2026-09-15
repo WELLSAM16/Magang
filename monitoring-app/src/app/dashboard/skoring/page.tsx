@@ -47,6 +47,7 @@ export default function SkoringPage() {
         // Format data sesuai permintaan
         const excelData = posts.map((post, index) => ({
             "Nomor": index + 1,
+            "Kategori": post.scoring?.kategori || "-",
             "Tanggal": new Date(post.timestamp).toLocaleDateString(),
             "Username": post.username || "-",
             "Judul Pemberitaan": post.caption || "-",
@@ -139,7 +140,7 @@ export default function SkoringPage() {
                                 <td style={{ padding: '12px' }}>{post.scoring?.platform}</td>
                                 <td style={{ padding: '12px' }}>{post.likes}</td>
                                 <td style={{ padding: '12px' }}>
-                                    <span style={{ padding: '4px 8px', borderRadius: '12px', background: 'rgba(0, 229, 255, 0.2)', fontSize: '0.85em' }}>
+                                    <span style={{ padding: '4px 10px', borderRadius: '12px', background: 'rgba(0, 229, 255, 0.2)', fontSize: '0.85em', whiteSpace: 'nowrap', display: 'inline-block' }}>
                                         {post.scoring?.kategori}
                                     </span>
                                 </td>
