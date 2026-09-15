@@ -11,7 +11,6 @@ async function callComposio(apiKey: string, entityId: string, tool: string, args
             "Content-Type": "application/json"
         },
         body: JSON.stringify({
-            connected_account_id: CONNECTED_ACCOUNT_ID,
             entity_id: entityId,
             arguments: args
         })
@@ -68,15 +67,16 @@ export async function GET() {
                         timestamp: post.timestamp || "",
                         username: post.username || "",
                         // Metrik dari Insights
-                        reach: metrics['reach'] ?? 0,
-                        impressions: metrics['impressions'] ?? 0,
+                        reach: metrics['reach'] ?? metrics['carousel_album_reach'] ?? 0,
+                        impressions: metrics['impressions'] ?? metrics['carousel_album_impressions'] ?? 0,
                         likes: post.like_count ?? metrics['likes'] ?? 0,
                         comments: post.comments_count ?? metrics['comments'] ?? 0,
-                        shares: metrics['shares'] ?? 0,
-                        saved: metrics['saved'] ?? 0,
+                        shares: metrics['shares'] ?? metrics['carousel_album_shares'] ?? 0,
+                        saved: metrics['saved'] ?? metrics['carousel_album_saved'] ?? 0,
                         plays: metrics['plays'] ?? metrics['video_views'] ?? 0,
                     };
-                } catch {
+                } catch (error) {
+                    console.error("Insights error for post " + post.id, error);
                     // Jika insights gagal, kembalikan data dasar dengan metrik 0
                     return {
                         id: post.id,
