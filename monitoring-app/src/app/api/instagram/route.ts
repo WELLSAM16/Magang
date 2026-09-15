@@ -35,7 +35,7 @@ export async function GET() {
         // Step 1: Ambil daftar media
         const mediaData = await callComposio(apiKey, entityId, "INSTAGRAM_GET_USER_MEDIA", {
             ig_user_id: "me",
-            fields: "id,caption,media_type,permalink,timestamp,username"
+            fields: "id,caption,media_type,permalink,timestamp,username,like_count,comments_count"
         });
 
         const mediaList: any[] = Array.isArray(mediaData)
@@ -70,8 +70,8 @@ export async function GET() {
                         // Metrik dari Insights
                         reach: metrics['reach'] ?? 0,
                         impressions: metrics['impressions'] ?? 0,
-                        likes: metrics['likes'] ?? 0,
-                        comments: metrics['comments'] ?? 0,
+                        likes: post.like_count ?? metrics['likes'] ?? 0,
+                        comments: post.comments_count ?? metrics['comments'] ?? 0,
                         shares: metrics['shares'] ?? 0,
                         saved: metrics['saved'] ?? 0,
                         plays: metrics['plays'] ?? metrics['video_views'] ?? 0,
@@ -87,8 +87,8 @@ export async function GET() {
                         username: post.username || "",
                         reach: 0,
                         impressions: 0,
-                        likes: 0,
-                        comments: 0,
+                        likes: post.like_count ?? 0,
+                        comments: post.comments_count ?? 0,
                         shares: 0,
                         saved: 0,
                         plays: 0,
