@@ -559,21 +559,28 @@ export function getKategoriMedia(mediaType: string): string {
   return 'Instagram Feeds'; // Default
 }
 
-export function getScoreByLikes(platform: string, likes: number): number {
+export function getScoreByLikes(platform: string, likes: number): { score: number, tierName: string } {
   const platformRules = SCORING_RULES.filter(r => r.platform.toLowerCase() === platform.toLowerCase());
   
   for (const rule of platformRules) {
     if (likes >= rule.min_likes) {
-      return rule.score;
+      return {
+        score: rule.score,
+        tierName: `${platform} - View/Like ≥${rule.min_likes.toLocaleString('id-ID')}`
+      };
     }
   }
   
   // Jika jumlah likes tidak sampai 100 (kategori terendah), masukkan ke skor kategori terendah tersebut
   if (platformRules.length > 0) {
-    return platformRules[platformRules.length - 1].score;
+    const lowestRule = platformRules[platformRules.length - 1];
+    return {
+      score: lowestRule.score,
+      tierName: `${platform} - View/Like ≥${lowestRule.min_likes.toLocaleString('id-ID')}`
+    };
   }
   
-  return 0;
+  return { score: 0, tierName: platform };
 }
 
 export function getKategoriAuto(text: string): string {
@@ -606,9 +613,9 @@ export function findMatchingKeywords(text: string): string[] {
   return Array.from(new Set(matched));
 }
 
-export function calculatePostScore(post: { media_type?: string; likes: number; caption?: string }): { score: number; kategori: string; keywords: string[]; platform: string } {
+export function calculatePostScore(post: { media_type?: string; likes: number; caption?: string }): { score: number; kategori: string; keywords: string[]; platform: string; tierName: string } {
   const platform = getKategoriMedia(post.media_type || '');
-  const score = getScoreByLikes(platform, post.likes);
+  const { score, tierName } = getScoreByLikes(platform, post.likes);
   const kategori = getKategoriAuto(post.caption || '');
   const keywords = findMatchingKeywords(post.caption || '');
   
@@ -616,6 +623,7 @@ export function calculatePostScore(post: { media_type?: string; likes: number; c
     platform,
     score,
     kategori,
-    keywords
+    keywords,
+    tierName
   };
 }

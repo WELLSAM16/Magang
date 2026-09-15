@@ -49,7 +49,7 @@ export default function SkoringPage() {
             "Nomor": index + 1,
             "Tanggal": new Date(post.timestamp).toLocaleDateString(),
             "Link": post.permalink,
-            "Kategori Media": post.scoring?.platform || "Tidak diketahui"
+            "Kategori Media": post.scoring?.tierName || post.scoring?.platform || "Tidak diketahui"
         }));
 
         // Buat worksheet dan workbook
