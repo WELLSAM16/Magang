@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { GET as fetchInstagramData } from '../instagram/route';
-import { calculatePostScore } from '@/lib/scoring';
+import { calculatePostScore, getDynamicKeywordCategories } from '@/lib/scoring';
 
 export async function GET(request: Request) {
     try {
@@ -31,13 +31,16 @@ export async function GET(request: Request) {
             });
         }
 
+        // Fetch custom keywords
+        const keywordMap = await getDynamicKeywordCategories();
+
         // Hitung skor untuk setiap post
         const scoredPosts = posts.map((post: any) => {
             const scoringInfo = calculatePostScore({
                 media_type: post.media_type,
                 likes: post.likes || 0,
                 caption: post.caption || ''
-            });
+            }, keywordMap);
 
             return {
                 ...post,

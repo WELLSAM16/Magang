@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
+import Link from 'next/link';
+import KeywordManagerModal from '@/components/KeywordManagerModal';
 
 export default function SkoringPage() {
     const [posts, setPosts] = useState<any[]>([]);
@@ -9,6 +11,7 @@ export default function SkoringPage() {
     const [error, setError] = useState('');
     const [startDate, setStartDate] = useState('');
     const [endDate, setEndDate] = useState('');
+    const [isKeywordModalOpen, setIsKeywordModalOpen] = useState(false);
 
     const fetchSkoringData = async () => {
         setLoading(true);
@@ -72,7 +75,17 @@ export default function SkoringPage() {
 
     return (
         <div className="container" style={{ padding: '20px' }}>
-            <h1 className="text-gradient" style={{ marginBottom: '20px' }}>Skoring Dashboard</h1>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', flexWrap: 'wrap', gap: '15px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                    <Link href="/dashboard" className="btn" style={{ textDecoration: 'none', background: 'var(--card-bg)', border: '1px solid var(--card-border)', padding: '8px 16px', borderRadius: '8px', color: 'var(--text-color)', fontWeight: 'bold' }}>
+                        &larr; Back
+                    </Link>
+                    <h1 className="text-gradient" style={{ margin: 0 }}>Skoring Dashboard</h1>
+                </div>
+                <button className="btn btn-primary" onClick={() => setIsKeywordModalOpen(true)}>
+                    Kelola Keyword
+                </button>
+            </div>
             
             <div className="glass-panel" style={{ padding: '20px', marginBottom: '20px', display: 'flex', gap: '15px', alignItems: 'flex-end' }}>
                 <div>
@@ -164,6 +177,14 @@ export default function SkoringPage() {
                     Download Excel
                 </button>
             </div>
+
+            <KeywordManagerModal 
+                isOpen={isKeywordModalOpen} 
+                onClose={() => {
+                    setIsKeywordModalOpen(false);
+                    fetchSkoringData();
+                }} 
+            />
         </div>
     );
 }

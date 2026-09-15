@@ -552,6 +552,27 @@ export const KEYWORD_CATEGORIES: Record<string, string[]> = {
   ]
 };
 
+import { db } from './firebase';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
+
+export async function getDynamicKeywordCategories(): Promise<Record<string, string[]>> {
+  try {
+    const docRef = doc(db, 'settings', 'keyword_categories');
+    const docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      return docSnap.data() as Record<string, string[]>;
+    }
+  } catch (error) {
+    console.error("Error fetching keywords from firestore", error);
+  }
+  return KEYWORD_CATEGORIES;
+}
+
+export async function saveDynamicKeywordCategories(data: Record<string, string[]>) {
+  const docRef = doc(db, 'settings', 'keyword_categories');
+  await setDoc(docRef, data);
+}
+
 export function getKategoriMedia(mediaType: string): string {
   const type = (mediaType || '').toUpperCase();
   if (type === 'VIDEO') return 'Instagram Reels';
@@ -583,12 +604,12 @@ export function getScoreByLikes(platform: string, likes: number): { score: numbe
   return { score: 0, tierName: platform };
 }
 
-export function getKategoriAuto(text: string): string {
+export function getKategoriAuto(text: string, keywordMap: Record<string, string[]> = KEYWORD_CATEGORIES): string {
   if (!text) return '-';
   const textLower = text.toLowerCase();
   
   // Return the first category that has a matching keyword (substring match)
-  for (const [category, keywords] of Object.entries(KEYWORD_CATEGORIES)) {
+  for (const [category, keywords] of Object.entries(keywordMap)) {
     for (const kw of keywords) {
       if (textLower.includes(kw.toLowerCase())) {
         return category;
@@ -598,12 +619,12 @@ export function getKategoriAuto(text: string): string {
   return '-';
 }
 
-export function findMatchingKeywords(text: string): string[] {
+export function findMatchingKeywords(text: string, keywordMap: Record<string, string[]> = KEYWORD_CATEGORIES): string[] {
   if (!text) return [];
   const textLower = text.toLowerCase();
   const matched = [];
   
-  for (const keywords of Object.values(KEYWORD_CATEGORIES)) {
+  for (const keywords of Object.values(keywordMap)) {
     for (const kw of keywords) {
       if (textLower.includes(kw.toLowerCase())) {
         matched.push(kw);
@@ -613,11 +634,14 @@ export function findMatchingKeywords(text: string): string[] {
   return Array.from(new Set(matched));
 }
 
-export function calculatePostScore(post: { media_type?: string; likes: number; caption?: string }): { score: number; kategori: string; keywords: string[]; platform: string; tierName: string } {
+export function calculatePostScore(
+  post: { media_type?: string; likes: number; caption?: string },
+  keywordMap: Record<string, string[]> = KEYWORD_CATEGORIES
+): { score: number; kategori: string; keywords: string[]; platform: string; tierName: string } {
   const platform = getKategoriMedia(post.media_type || '');
   const { score, tierName } = getScoreByLikes(platform, post.likes);
-  const kategori = getKategoriAuto(post.caption || '');
-  const keywords = findMatchingKeywords(post.caption || '');
+  const kategori = getKategoriAuto(post.caption || '', keywordMap);
+  const keywords = findMatchingKeywords(post.caption || '', keywordMap);
   
   return {
     platform,
