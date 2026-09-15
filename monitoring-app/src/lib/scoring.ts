@@ -567,7 +567,13 @@ export function getScoreByLikes(platform: string, likes: number): number {
       return rule.score;
     }
   }
-  return 0; // default score if no rule matches
+  
+  // Jika jumlah likes tidak sampai 100 (kategori terendah), masukkan ke skor kategori terendah tersebut
+  if (platformRules.length > 0) {
+    return platformRules[platformRules.length - 1].score;
+  }
+  
+  return 0;
 }
 
 export function getKategoriAuto(text: string): string {
