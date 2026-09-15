@@ -182,7 +182,7 @@ export default function Dashboard() {
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
               <thead>
                 <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
-                  {["TANGGAL", "FORMAT", "JUDUL / HOOK", "TAYANGAN", "JANGKAUAN", "SUKA", "KOMENTAR", "BAGIKAN", "SIMPAN", "ER"].map(col => (
+                  {["TANGGAL", "FORMAT", "JUDUL / HOOK", "TAYANGAN", "JANGKAUAN", "SUKA", "KOMENTAR", "BAGIKAN", "SIMPAN"].map(col => (
                     <th key={col} style={{
                       padding: "12px 16px",
                       textAlign: col === "JUDUL / HOOK" ? "left" : "center",
@@ -247,7 +247,7 @@ export default function Dashboard() {
                           </a>
                         </td>
                         {[
-                          { val: post.impressions, color: "#0ea5e9" },
+                          { val: post.impressions || post.plays || 0, color: "#0ea5e9" },
                           { val: post.reach, color: "#8b5cf6" },
                           { val: post.likes, color: "var(--danger)" },
                           { val: post.comments, color: "var(--success)" },
@@ -258,9 +258,6 @@ export default function Dashboard() {
                             {val.toLocaleString("id-ID")}
                           </td>
                         ))}
-                        <td style={{ padding: "13px 16px", textAlign: "center", fontWeight: 700, color: "#facc15" }}>
-                          {er}
-                        </td>
                       </tr>
                     );
                   })
